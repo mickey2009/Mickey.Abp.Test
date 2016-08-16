@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Domain.Repositories;
 using AutoMapper;
 using SimpleTaskSystem.People;
 using SimpleTaskSystem.Tasks.Dtos;
+using System.Collections.Generic;
 
 namespace SimpleTaskSystem.Tasks
 {
@@ -16,10 +16,10 @@ namespace SimpleTaskSystem.Tasks
     public class TaskAppService : ApplicationService, ITaskAppService
     {
         //These members set in constructor using constructor injection.
-        
+
         private readonly ITaskRepository _taskRepository;
         private readonly IRepository<Person> _personRepository;
-        
+
         /// <summary>
         ///In constructor, we can get needed classes/interfaces.
         ///They are sent here by dependency injection system automatically.
@@ -29,7 +29,7 @@ namespace SimpleTaskSystem.Tasks
             _taskRepository = taskRepository;
             _personRepository = personRepository;
         }
-        
+
         public GetTasksOutput GetTasks(GetTasksInput input)
         {
             //Called specific GetAllWithPeople method of task repository.
@@ -37,11 +37,11 @@ namespace SimpleTaskSystem.Tasks
 
             //Used AutoMapper to automatically convert List<Task> to List<TaskDto>.
             return new GetTasksOutput
-                   {
-                       Tasks = Mapper.Map<List<TaskDto>>(tasks)
-                   };
+            {
+                Tasks = Mapper.Map<List<TaskDto>>(tasks)
+            };
         }
-        
+
         public void UpdateTask(UpdateTaskInput input)
         {
             //We can use Logger, it's defined in ApplicationService base class.
@@ -75,10 +75,11 @@ namespace SimpleTaskSystem.Tasks
             //Creating a new Task entity with given input's properties
             var task = new Task { Description = input.Description };
 
-            if (input.AssignedPersonId.HasValue)
-            {
-                task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
-            }
+            task.AssignedPersonId = input.AssignedPersonId.Value;
+            //if (input.AssignedPersonId.HasValue)
+            //{
+            //    task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
+            //}
 
             //Saving entity with standard Insert method of repositories.
             _taskRepository.Insert(task);

@@ -22,10 +22,22 @@ namespace SimpleTaskSystem.ConsoleApp
             {
                 Console.WriteLine(task.ToString());
             }
-            result = _taskAppService.GetTasks(new GetTasksInput());
 
             Console.WriteLine();
             Console.WriteLine("{0} tasks listed.", result.Tasks.Count);
+        }
+
+
+        public void TestException()
+        {
+            _taskAppService.CreateTask(new CreateTaskInput()
+            {
+                Description = "xxxxx",
+                AssignedPersonId = 5
+            });
+
+            Console.WriteLine();
+            Console.WriteLine("{0} tasks listed.", "1");
         }
     }
 }
